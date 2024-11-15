@@ -26,7 +26,7 @@ namespace Kreata.Backend.Controllers
             {
                 entity = await _janitorRepo.GetBy(id);
                 if (entity != null)
-                    return Ok(entity.ToStudentDto());
+                    return Ok(entity.ToJanitorDto());
             }
             return BadRequest("Az adatok elérhetetlenek!");
         }
@@ -34,23 +34,23 @@ namespace Kreata.Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> SelectAllRecordToListAsync()
         {
-            List<Student>? users = new();
+            List<Janitor>? users = new();
 
             if (_janitorRepo != null)
             {
                 users = await _janitorRepo.GetAll();
-                return Ok(users.Select(student => student.ToStudentDto()));
+                return Ok(users.Select(janitor => janitor.ToJanitorDto()));
             }
             return BadRequest("Az adatok elérhetetlenek!");
         }
 
         [HttpPut()]
-        public async Task<ActionResult> UpdateStudentAsync(StudentDto entity)
+        public async Task<ActionResult> UpdateJanitorAsync(JanitorDto entity)
         {
             ControllerResponse response = new();
             if (_janitorRepo is not null)
             {
-                response = await _janitorRepo.UpdateStudentAsync(entity.ToStudent());
+                response = await _janitorRepo.UpdateJanitorAsync(entity.ToJanitor());
                 if (response.HasError)
                 {
                     return BadRequest(response);

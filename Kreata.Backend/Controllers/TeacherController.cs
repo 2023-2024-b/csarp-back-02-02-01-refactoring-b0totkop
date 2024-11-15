@@ -1,5 +1,7 @@
 ﻿using Kreata.Backend.Datas.Entities;
 using Kreata.Backend.Datas.Responses;
+using Kreata.Backend.Dtos;
+using Kreata.Backend.Extensions;
 using Kreata.Backend.Repos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +26,7 @@ namespace Kreata.Backend.Controllers
             {
                 entity = await _teacherRepo.GetBy(id);
                 if (entity != null)
-                    return Ok(entity);
+                    return Ok(entity.ToTeacherDto());
             }
             return BadRequest("Az adatok elérhetetlenek!");
         }
@@ -37,18 +39,18 @@ namespace Kreata.Backend.Controllers
             if (_teacherRepo != null)
             {
                 users = await _teacherRepo.GetAll();
-                return Ok(users);
+                return Ok(users.Select(teacher => teacher.ToTeacherDto()));
             }
             return BadRequest("Az adatok elérhetetlenek!");
         }
 
         [HttpPut()]
-        public async Task<ActionResult> UpdateTeacherAsync(Teacher entity)
+        public async Task<ActionResult> UpdateTeacherAsync(TeacherDto entity)
         {
             ControllerResponse response = new();
             if (_teacherRepo is not null)
             {
-                response = await _teacherRepo.UpdateTeacherAsync(entity);
+                response = await _teacherRepo.UpdateTeacherAsync(entity.ToTeacher());
                 if (response.HasError)
                 {
                     return BadRequest(response);
