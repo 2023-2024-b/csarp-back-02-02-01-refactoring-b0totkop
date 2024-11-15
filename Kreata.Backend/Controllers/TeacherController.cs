@@ -1,7 +1,5 @@
 ﻿using Kreata.Backend.Datas.Entities;
 using Kreata.Backend.Datas.Responses;
-using Kreata.Backend.Dtos;
-using Kreata.Backend.Extensions;
 using Kreata.Backend.Repos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,24 +7,24 @@ namespace Kreata.Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentController : ControllerBase
+    public class TeacherController : ControllerBase
     {
-        private IStudentRepo _studentRepo;
+        private ITeacherRepo _teacherRepo;
 
-        public StudentController(IStudentRepo studentRepo)
+        public TeacherController(ITeacherRepo teacherRepo)
         {
-            _studentRepo = studentRepo;
+            _teacherRepo = teacherRepo;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBy(Guid id)
         {
-            Student? entity = new();
-            if (_studentRepo is not null)
+            Teacher? entity = new();
+            if (_teacherRepo is not null)
             {
-                entity = await _studentRepo.GetBy(id);
+                entity = await _teacherRepo.GetBy(id);
                 if (entity != null)
-                    return Ok(entity.ToStudentDto());
+                    return Ok(entity);
             }
             return BadRequest("Az adatok elérhetetlenek!");
         }
@@ -34,23 +32,23 @@ namespace Kreata.Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> SelectAllRecordToListAsync()
         {
-            List<Student>? users = new();
+            List<Teacher>? users = new();
 
-            if (_studentRepo != null)
+            if (_teacherRepo != null)
             {
-                users = await _studentRepo.GetAll();
-                return Ok(users.Select(student => student.ToStudentDto()));
+                users = await _teacherRepo.GetAll();
+                return Ok(users);
             }
             return BadRequest("Az adatok elérhetetlenek!");
         }
 
         [HttpPut()]
-        public async Task<ActionResult> UpdateStudentAsync(StudentDto entity)
+        public async Task<ActionResult> UpdateTeacherAsync(Teacher entity)
         {
             ControllerResponse response = new();
-            if (_studentRepo is not null)
+            if (_teacherRepo is not null)
             {
-                response = await _studentRepo.UpdateStudentAsync(entity.ToStudent());
+                response = await _teacherRepo.UpdateTeacherAsync(entity);
                 if (response.HasError)
                 {
                     return BadRequest(response);

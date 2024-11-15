@@ -9,22 +9,22 @@ namespace Kreata.Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentController : ControllerBase
+    public class JanitorController : ControllerBase
     {
-        private IStudentRepo _studentRepo;
+        private IJanitorRepo _janitorRepo;
 
-        public StudentController(IStudentRepo studentRepo)
+        public JanitorController(IJanitorRepo janitorRepo)
         {
-            _studentRepo = studentRepo;
+            _janitorRepo = janitorRepo;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBy(Guid id)
         {
-            Student? entity = new();
-            if (_studentRepo is not null)
+            Janitor? entity = new();
+            if (_janitorRepo is not null)
             {
-                entity = await _studentRepo.GetBy(id);
+                entity = await _janitorRepo.GetBy(id);
                 if (entity != null)
                     return Ok(entity.ToStudentDto());
             }
@@ -36,9 +36,9 @@ namespace Kreata.Backend.Controllers
         {
             List<Student>? users = new();
 
-            if (_studentRepo != null)
+            if (_janitorRepo != null)
             {
-                users = await _studentRepo.GetAll();
+                users = await _janitorRepo.GetAll();
                 return Ok(users.Select(student => student.ToStudentDto()));
             }
             return BadRequest("Az adatok elérhetetlenek!");
@@ -48,9 +48,9 @@ namespace Kreata.Backend.Controllers
         public async Task<ActionResult> UpdateStudentAsync(StudentDto entity)
         {
             ControllerResponse response = new();
-            if (_studentRepo is not null)
+            if (_janitorRepo is not null)
             {
-                response = await _studentRepo.UpdateStudentAsync(entity.ToStudent());
+                response = await _janitorRepo.UpdateStudentAsync(entity.ToStudent());
                 if (response.HasError)
                 {
                     return BadRequest(response);
